@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Root route
 app.get("/", (req, res) => {
-  res.json({ message: "Sweet Shop API is running 🚀" });
+  res.json({ message: "Sweet Shop API is running" });
 });
 
 export default app;
