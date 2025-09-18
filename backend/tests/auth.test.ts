@@ -1,15 +1,10 @@
 import request from "supertest";
 import app from "../src/app";
 import User from "../src/models/User";
-import mongoose from "mongoose";
 
 describe("Auth API", () => {
   beforeEach(async () => {
     await User.deleteMany({});
-  });
-
-  afterAll(async () => {
-    await mongoose.connection.close();
   });
 
   it("should register a new user", async () => {
