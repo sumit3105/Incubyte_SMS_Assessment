@@ -52,7 +52,7 @@ afterEach(async () => {
 describe("Inventory API", () => {
   it("should allow a customer to purchase a sweet (decrease quantity)", async () => {
     const res = await request(app)
-      .post(`/api/sweets/${sweetId}/purchase`)
+      .post(`/api/inventory/${sweetId}/purchase`)
       .set("Authorization", `Bearer ${token}`)
       .send({ quantity: 2 })
       .expect(200);
@@ -62,7 +62,7 @@ describe("Inventory API", () => {
 
   it("should not allow purchase if insufficient stock", async () => {
     const res = await request(app)
-      .post(`/api/sweets/${sweetId}/purchase`)
+      .post(`/api/inventory/${sweetId}/purchase`)
       .set("Authorization", `Bearer ${token}`)
       .send({ quantity: 20 })
       .expect(400);
@@ -72,7 +72,7 @@ describe("Inventory API", () => {
 
   it("should allow admin to restock a sweet (increase quantity)", async () => {
     const res = await request(app)
-      .post(`/api/sweets/${sweetId}/restock`)
+      .post(`/api/inventory/${sweetId}/restock`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({ quantity: 5 })
       .expect(200);
