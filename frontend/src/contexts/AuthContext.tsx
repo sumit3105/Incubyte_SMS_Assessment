@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = res.data.token;
     localStorage.setItem("token", token);
 
-    const role = res.data.role || "customer";
+    const role = res.data.user.role || "customer";
 
     const loggedInUser = { email, role } as User;
     setUser(loggedInUser);

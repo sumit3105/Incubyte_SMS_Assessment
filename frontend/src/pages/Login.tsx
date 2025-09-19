@@ -5,6 +5,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import type { User } from "../types/index";
 
 const schema = z.object({
   email: z.string().email("Invalid email"),
@@ -13,7 +14,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function Login() {
-  const { login, user } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -23,13 +24,15 @@ export default function Login() {
     try {
       await login(data.email, data.password);
       toast.success("Login successful 🎉");
-      if (user?.role === "admin") {
+
+      const loggedInUser = JSON.parse(localStorage.getItem("user") || "{}") as User;
+
+      if (loggedInUser?.role === "admin") {
         navigate("/admin");
       } else {
         navigate("/");
       }
     } catch (err: any) {
-      // If backend sent structured error
       if (axios.isAxiosError(err) && err.response?.data?.msg) {
         toast.error(err.response.data.msg);
       } else {
@@ -37,6 +40,7 @@ export default function Login() {
       }
     }
   }
+
 
   return (
     <div className="max-w-md mx-auto mt-12 bg-white p-6 rounded shadow">

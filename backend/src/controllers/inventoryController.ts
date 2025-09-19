@@ -1,6 +1,7 @@
 import { Response } from "express";
 import Sweet from "../models/Sweet";
 import { AuthRequest } from "../middleware/authMiddleware";
+import mongoose from "mongoose";
 
 export const purchaseSweet = async (req: AuthRequest, res: Response) => {
   try {
@@ -25,8 +26,7 @@ export const purchaseSweet = async (req: AuthRequest, res: Response) => {
 export const restockSweet = async (req: AuthRequest, res: Response) => {
   try {
     const { quantity } = req.body;
-    const sweet = await Sweet.findById(req.params.id);
-
+    const sweet = await Sweet.findById(new mongoose.Types.ObjectId(req.params.id));
     if (!sweet) return res.status(404).json({ msg: "Sweet not found" });
 
     sweet.quantity += quantity;

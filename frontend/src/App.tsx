@@ -2,7 +2,7 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import Navbar from "./components/Navbar";   // <-- import
+import Navbar from "./components/Navbar";   
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Sweets from "./pages/Sweets";
@@ -34,6 +34,16 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
+          {/* Admin dashboard */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          
           {/* Customer home */}
           <Route
             path="/"
@@ -44,15 +54,6 @@ export default function App() {
             }
           />
 
-          {/* Admin dashboard */}
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute role="admin">
-                <AdminDashboard />
-              </ProtectedRoute>
-            }
-          />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />
