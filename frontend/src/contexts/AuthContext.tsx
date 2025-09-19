@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+// src/contexts/AuthContext.tsx
+import React, { createContext, useContext, useState } from "react";
 import api from "../api/client";
 import type { User } from "../types";
 
@@ -17,38 +18,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return raw ? JSON.parse(raw) : null;
   });
 
-  useEffect(() => {
-    if (!user) {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-    }
-  }, []);
-
   async function login(email: string, password: string) {
     const res = await api.post("/auth/login", { email, password });
     const token = res.data.token;
     localStorage.setItem("token", token);
-    setUser({ email } as User);
-    localStorage.setItem("user", JSON.stringify({ email }));
+
+    const role = res.data.role || "customer";
+
+    const loggedInUser = { email, role } as User;
+    setUser(loggedInUser);
+    localStorage.setItem("user", JSON.stringify(loggedInUser));
   }
 
   async function register(name: string, email: string, password: string) {
     await api.post("/auth/register", { name, email, password });
-    // auto-login after register
-    await login(email, password);
+    await login(email, password); // auto-login
   }
 
   function logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    localStorage.clear();
     setUser(null);
   }
 
-  return <AuthContext.Provider value={{ user, login, register, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }
