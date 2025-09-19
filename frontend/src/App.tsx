@@ -2,11 +2,12 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
-import Navbar from "./components/Navbar";   
+import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Sweets from "./pages/Sweets";
+// import Sweets from "./pages/Sweets";
 import AdminDashboard from "./pages/AdminDashboard";
+import CustomerDashboard from "./pages/CustomerDashboard";
 
 function ProtectedRoute({
   children,
@@ -43,16 +44,17 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          
+
           {/* Customer home */}
           <Route
             path="/"
             element={
               <ProtectedRoute role="customer">
-                <Sweets />
+                <CustomerDashboard />
               </ProtectedRoute>
             }
           />
+
 
 
           {/* Fallback */}
